@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3005
 
 app.get('/', (reg,res)=>{
     res.end('<h1> Home Page</h1>'+
-    '<div> <ul><li><a href ="/about"> Apout Pagr</li></ul></div>')
+    '<div> <ul><li><a href ="/about"> Apout Page Ilia</li></ul></div>')
 })
 
 app.get('/about', (reg,res)=>{
