@@ -1,9 +1,16 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const cookieParse = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const app = express()
+const sequelize = require('./db')
+const router = require('./router/index')
 
 const PORT = process.env.PORT || 3005
+app.use(cors())
+app.use(cookieParser())
+app.use(express.json())
+app.use('/api', router)
 
 app.get('/', (reg,res)=>{
     res.end('<h1> Home Page</h1>'+
@@ -17,10 +24,10 @@ app.get('/about', (reg,res)=>{
 
 const start = async () => {
     try {
+        await sequelize.authenticate()
+        await sequelize.sync()
         app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
-    } catch (e) {
-        console.log(e)
-    }
+    } catch (e) {console.log(e)}
 }
 
 
