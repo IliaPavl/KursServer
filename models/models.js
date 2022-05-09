@@ -6,10 +6,10 @@ const User = sequelize.define('user', {
     email: {type: DataTypes.STRING, unique: true, require: true},
     password: {type: DataTypes.STRING, require: true},
     login: {type: DataTypes.STRING,unique: true, require: true},
-    role: {type: DataTypes.STRING, defaultValue: "USER", require: true},
-    isActivated: {type: DataTypes.BOOLEAN, defaultValue: false, require: true},
-    isBlocked: {type: DataTypes.BOOLEAN, defaultValue: false, require: true},
-    activationLink: {type: DataTypes.STRING, require: true},
+    role: {type: DataTypes.STRING, defaultValue: "USER" },
+    isActivated: {type: DataTypes.BOOLEAN, defaultValue: false },
+    isBlocked: {type: DataTypes.BOOLEAN, defaultValue: false },
+    activationLink: {type: DataTypes.STRING},
 })
 
 const TokenShema = sequelize.define('tokens', {

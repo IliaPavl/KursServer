@@ -1,13 +1,17 @@
 
 const {User} = require('../models/models');
+const userServise = require('../service/userService')
 
 
 
 class UserController {
     async registration(req, res, next) {
         try{
-            
-        }catch(e){}
+            const {email,password,login}=req.body;
+            const userData = await userServise.registration(email,login,password);
+            res.cookie('refresh',userData.refresh,{maxAge: 5*24*60*60*1000,httpOnly: true})
+            return res.json(userData);
+        }catch(e){ console.log(e);}
        
     }
     async logout(req, res, next) {
