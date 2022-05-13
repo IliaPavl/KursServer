@@ -1,6 +1,6 @@
 const ApiError = require('../exceptions/api-error');
 const {User} = require('../models/models')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 
 

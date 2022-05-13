@@ -3,7 +3,7 @@ const UserDTO = require('../dtos/userDTO')
 const ApiError = require('../exceptions/api-error');
 const Cheaks = require('../checks/userServiceCheaks')
 
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const tokenService = require('./tokenService')
 
 class UserService{
