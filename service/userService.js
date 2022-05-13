@@ -1,30 +1,51 @@
 const {User,TokenShema} = require('../models/models')
 const UserDTO = require('../dtos/userDTO')
+const ApiError = require('../exceptions/api-error');
+const Cheaks = require('../checks/userServiceCheaks')
 
 const bcrypt = require('bcrypt')
-const uuid = require('uuid')
-const mailService = require('./mailService')
 const tokenService = require('./tokenService')
 
 class UserService{
     async registration(email,login,password){
-        const candidate = await User.findOne({where: {email}})
-        if(candidate){
-            throw new Error('User with email is'+email+' enable')
-        }
-        const candidate2 = await User.findOne({where: {login}})
-        if(candidate2){
-            throw new Error('User with login is'+login+' enable')
-        }
+        await Cheaks.cheakEmail(email);
+        await Cheaks.cheakEmail(login);
         const hasPassword = await bcrypt.hash(password,3);
-        const activationLink = uuid.v4();
-        const user = await User.create({email,password:hasPassword,login,activationLink});
-        await mailService.sendMail(email,activationLink);
-        const userDTO =new UserDTO(user); 
-        const tokens= tokenService.generateToken({...userDTO});
+        const user = await User.create({email,password: hasPassword,login});
+        return this.save(user);
+    }
+    
+    async login(email, password) {
+        const user = await User.findOne({where: {email}})
+        await Cheaks.cheakLoginEmail(email);
+        await Cheaks.cheakPassword(password,email);
+        return this.save(user)
+    }
+    
+    async logout(refreshToken) {
+        const token = await tokenService.removeToken(refreshToken);
+        return token;
+    }
 
-        await tokenService.saveToken(userDTO.id,tokens.refresh);
-        return{...tokens,user: userDTO}
+    async refresh(refreshToken) {
+        await Cheaks.cheakRefreshToken(refreshToken);
+        const userData = tokenService.validateRefreshToken(refreshToken);
+        const tokenFromDb = await tokenService.findToken(refreshToken);
+        await Cheaks.cheakRefreshToken(userData,tokenFromDb);
+        const user = await User.findById({where: {id: userData.id}});
+        return this.save(user);
+    }
+
+    async save(user) {
+        const userDTO = new UserDTO(user);
+        const tokens= tokenService.generateToken({...userDTO});
+        await tokenService.saveToken(userDTO.id,tokens.refreshToken);
+        return {...tokens, user: userDTO}
+    }
+
+    async getUsers() {
+        const users = await User.findAll();
+        return users;
     }
 }
 module.exports = new UserService();

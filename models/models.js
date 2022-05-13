@@ -7,17 +7,15 @@ const User = sequelize.define('user', {
     password: {type: DataTypes.STRING, require: true},
     login: {type: DataTypes.STRING,unique: true, require: true},
     role: {type: DataTypes.STRING, defaultValue: "USER" },
-    isActivated: {type: DataTypes.BOOLEAN, defaultValue: false },
-    isBlocked: {type: DataTypes.BOOLEAN, defaultValue: false },
-    activationLink: {type: DataTypes.STRING},
+    isBanned: {type: DataTypes.BOOLEAN, defaultValue: false },
 })
 
 const TokenShema = sequelize.define('tokens', {
-    resreshToken: {type: DataTypes.STRING, require: true},
+    refreshToken: {type: DataTypes.STRING, require: true},
 })
 
 User.hasOne(TokenShema)
-TokenShema.belongsTo(User)
+
 module.exports = {
     User,
     TokenShema

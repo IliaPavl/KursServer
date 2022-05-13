@@ -5,22 +5,14 @@ const cookieParser = require('cookie-parser')
 const app = express()
 const sequelize = require('./db')
 const router = require('./router/index')
+const errorMiddleware = require('./middlewares/error-middleware');
 
 const PORT = process.env.PORT || 3005
 app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
-app.use('/api', router)
-
-app.get('/', (reg,res)=>{
-    res.end('<h1> Home Page</h1>'+
-    '<div> <ul><li><a href ="/about"> Apout Page Ilia</li></ul></div>')
-})
-
-app.get('/about', (reg,res)=>{
-    res.end('<h1> About Page</h1>'+
-    '<div> <ul><li><a href ="/"> Home Pagr</li></ul></div>')
-})
+app.use('/api',router)
+app.use(errorMiddleware);
 
 const start = async () => {
     try {
