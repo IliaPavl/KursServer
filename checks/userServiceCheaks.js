@@ -38,7 +38,7 @@ class UserServiceCheaks{
         }
     }
     
-    async cheakRefreshToken(userData,tokenFromDb){
+    async cheakRefreshToken2(userData,tokenFromDb){
         if (!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
         }

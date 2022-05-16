@@ -6,10 +6,10 @@ module.exports = function (req, res, next) {
     try {
         AuthCheak.headrCheak(req,next);
         AuthCheak.accessTokenCheak(req,next);
-        AuthCheak.userDataCheak(next);
-        req.user = userData;
+        req.user = AuthCheak.userDataCheak(req,next);
         next();
     } catch (e) {
+        console.log("midle "+e)
         return next(ApiError.UnauthorizedError());
     }
 };

@@ -6,9 +6,15 @@ const app = express()
 const sequelize = require('./db')
 const router = require('./router/index')
 const errorMiddleware = require('./middlewares/error-middleware');
+const { generateToken } = require('./service/tokenService')
+const roleServise = require('./service/roleServise')
+const userService = require('./service/userService')
 
 const PORT = process.env.PORT || 3005
-app.use(cors())
+app.use(cors({
+    credentials:true,
+    origin: process.env.ClIENT_URL
+}));
 app.use(cookieParser())
 app.use(express.json())
 app.use('/api',router)
@@ -24,11 +30,14 @@ app.get('/about', (reg,res)=>{
     '<div> <ul><li><a href ="/"> Home Pagr</li></ul></div>')
 })
 
+ 
 
 const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+        await roleServise.generateStartRole()
+        await userService.generateStartAdmin()
         app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
     } catch (e) {console.log(e)}
 }

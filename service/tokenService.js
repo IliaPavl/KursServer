@@ -3,7 +3,7 @@ const {TokenShema} = require('../models/models')
 
 class TokenService{
     generateToken(payload){
-        const accessToken = jwt.sign(payload,process.env.SECRET_KEY_ACCESS,{expiresIn: "5m"});
+        const accessToken = jwt.sign(payload,process.env.SECRET_KEY_ACCESS,{expiresIn: "30m"});
         const refreshToken = jwt.sign(payload,process.env.SECRET_KEY_ACCESS,{expiresIn: "5d"});
         return {accessToken,refreshToken}
     }
